@@ -5,6 +5,9 @@
 - hosts: "all"
   become: true
   tasks:
+    -
+  # INSTALLING NGINX
+
   - name: "Install NGINX"
     ansible.builtin.apt:
       name: "nginx"
@@ -23,3 +26,17 @@
       owner: "vagrant"
       group: "vagrant"
       mode: "0644"
+
+  # INSTALLING MYSQL
+
+  - name: "Install MySQL"
+    ansible.builtin.apt:
+      name: "mysql-server"
+      state: "latest"
+      update_cache: true
+
+  - name: "Set up root user"
+    community.mysql.mysql_user:
+      name: "root"
+      password: "password"
+      login_unix_socket: "/var/run/"
