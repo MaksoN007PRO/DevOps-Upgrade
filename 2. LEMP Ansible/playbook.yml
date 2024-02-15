@@ -4,39 +4,12 @@
 ---
 - hosts: "all"
   become: true
+  roles:
+    - nginx
+    - mysql
+    - php
   tasks:
-    -
-  # INSTALLING NGINX
-
-  - name: "Install NGINX"
-    ansible.builtin.apt:
+  - name: "reload NGINX"
+    ansible.builtin.service:
       name: "nginx"
-      state: "latest"
-      update_cache: true
-
-  - name: "Delete /var/www/html"
-    ansible.builtin.file:
-      path: "/var/www/html"
-      state: "absent"
-
-  - name: "Copy our landing to /var/www/html folder"
-    ansible.builtin.copy:
-      src: "html"
-      dest: "/var/www"
-      owner: "vagrant"
-      group: "vagrant"
-      mode: "0644"
-
-  # INSTALLING MYSQL
-
-  - name: "Install MySQL"
-    ansible.builtin.apt:
-      name: "mysql-server"
-      state: "latest"
-      update_cache: true
-
-  - name: "Set up root user"
-    community.mysql.mysql_user:
-      name: "root"
-      password: "password"
-      login_unix_socket: "/var/run/"
+      state: "reloaded"
